@@ -18,8 +18,10 @@ module ALU(
         case(ALUCtrl)
             4'b0000 : begin
                 // subtraction
-                Overflow <= 0;
-                S <= 0;
+                // Overflow <= 0;
+                // S <= 0;
+                {overflowCheck, S} <= {1'b0, A} - {1'b0, B};
+                Overflow = overflowcheck & A[15] & B[15]
             end
             4'b0001 : begin
                 // addition
