@@ -1,0 +1,9 @@
+- to simulate locally
+    - extension: Verilog-HDL/SystemVerilog/Bluespec SystemVer
+    - brew install icarus-verilog
+    - include following in testbench:
+        $dumpfile("wave.vcd");
+        $dumpvars(0, tx_tb);
+    - `iverilog -o simulation.vvp tx.v testbench/tx_tb.v`
+    - vvp simulation.vvp
+
