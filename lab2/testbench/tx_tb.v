@@ -248,6 +248,7 @@ initial begin
 
     // Finish
     #5;
+    $finish;
     $stop;
 end
 

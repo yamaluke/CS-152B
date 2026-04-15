@@ -7,8 +7,8 @@ module tx(
     output reg tx_line
     );
 
-    // localparam  countMax = 100000000/9600; // 100MHz / 9600 baudrate
-    localparam countMax = 2; // for testing 
+    localparam  countMax = 100000000/9600; // 100MHz / 9600 baudrate
+    // localparam countMax = 2; // for testing 
     reg [25:0] count = 0;
     parameter S0 = 4'd0, S1 = 4'd1, S2 = 4'd2, S3 = 4'd3, S4 = 4'd4, S5 = 4'd5, S6 = 4'd6, S7 = 4'd7, S8 = 4'd8, S9 = 4'd9;
     reg [3:0] currentState;
