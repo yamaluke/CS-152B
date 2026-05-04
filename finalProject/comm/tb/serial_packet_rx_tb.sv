@@ -29,7 +29,7 @@ serial_packet_rx dut (
     .rx_line(rx_line),
     .word_data(word_data),
     .word_valid(word_valid),
-    .word_taken(word_taken),
+    // .word_taken(word_taken),
     .cmd(cmd),
     .addr(addr),
     .len(len),
@@ -56,7 +56,7 @@ task send_byte(input [7:0] b);
         // #(8680); // approx baud period (for 115200 @ 100MHz simplified)
 
         // data bits
-        for (i = 7; i >= 0; i = i - 1) begin
+        for (i = 0; i < 8; i = i + 1) begin
             rx_line = b[i];
             #(8680);
         end
@@ -115,7 +115,7 @@ task send_packet(
         crc = crc_calc(crc, len_i[7:0]);
 
         // PAYLOAD
-        for (i = len_i - 1; i >= 0; i = i - 1) begin
+        for (i = 0; i < len_i; i = i + 1) begin
             send_byte(payload[i]);
             crc = crc_calc(crc, payload[i]);
         end
@@ -208,7 +208,7 @@ initial begin
         begin
             // first word
             wait(word_valid);
-            if (word_data !== 32'hAABBCCDD) begin
+            if (word_data !== 32'h11223344) begin
                 $display("TEST2 FAIL WORD1: word_data=%h", word_data);
                 errors = errors + 1;
             end
@@ -216,7 +216,7 @@ initial begin
             // second word
             #20;
             wait(word_valid);
-            if (word_data !== 32'h11223344) begin
+            if (word_data !== 32'hAABBCCDD) begin
                 $display("TEST2 FAIL WORD2: word_data=%h", word_data);
                 errors = errors + 1;
             end

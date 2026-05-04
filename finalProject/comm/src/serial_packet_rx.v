@@ -9,7 +9,7 @@ module serial_packet_rx #(
     // 32-bit output to memory system
     output reg [31:0]  word_data,
     output reg         word_valid,
-    input  wire        word_taken,
+    // input  wire        word_taken,
 
     // packet-level outputs
     output reg [7:0]   cmd,
@@ -81,11 +81,11 @@ module serial_packet_rx #(
             byte_valid <= 0;
 
             if (state != IDLE && baud_tick) begin
-                shift_reg <= {shift_reg[6:0], rx_sync2};
+                shift_reg <= {rx_sync2, shift_reg[7:1]};
                 bit_cnt   <= bit_cnt + 1;
 
                 if (bit_cnt == 3'd7) begin
-                    byte_data  <= {shift_reg[6:0], rx_sync2};
+                    byte_data  <= {rx_sync2, shift_reg[7:1]};
                     byte_valid <= 1;
                     bit_cnt    <= 0;
                 end
@@ -104,7 +104,7 @@ module serial_packet_rx #(
         if (rst) begin
             sof_shift <= 8'h00;
         end else if (baud_tick) begin
-            sof_shift <= {sof_shift[6:0], rx_sync2};
+            sof_shift <= {rx_sync2, sof_shift[7:1]};
         end
     end
 
@@ -167,7 +167,7 @@ module serial_packet_rx #(
                     send_nack <= 1;
                     state     <= IDLE;
                 end
-                
+
                 // ------------------------------------------------
                 default: begin
                     if (byte_valid) begin
@@ -213,7 +213,8 @@ module serial_packet_rx #(
                             crc <= crc ^ byte_data;
 
                             // pack into 32-bit word
-                            word_data  <= {word_data[23:0], byte_data}; // small endian
+                            // word_data  <= {word_data[23:0], byte_data}; // small endian
+                            word_data <= {byte_data, word_data[31:8]}; // big endian
 
                             if (byte_index == 2'd3) begin
                                 word_valid <= 1;

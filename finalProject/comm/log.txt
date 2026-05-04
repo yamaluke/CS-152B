@@ -34,3 +34,10 @@
         - when the payload is not incremented in terms of 4 bytes, the last word will be flushed incorrectly
         - I was thinking of padding with 0s, but that has not been implemented well yet
         - this will need to be fixed at a future stage 
+
+- 5/4
+    - started working on TX
+    - current issue with how the FSM is processing 
+        - state transitions occur only when bytes are finished sending 
+    -   this will create a 1 cycle delay between the transitions 
+    - solution: create a second buffer that stores the next set of bytes for transmission, wtih a second buffer valid flag 
