@@ -41,3 +41,21 @@
         - state transitions occur only when bytes are finished sending 
     -   this will create a 1 cycle delay between the transitions 
     - solution: create a second buffer that stores the next set of bytes for transmission, wtih a second buffer valid flag 
+
+- 5/6
+    - communication handler module
+        - different CMD that the module needs to be able to decode and encode.
+            COM_CMD_WRITE_DATA    = 0x01,  /* write LEN bytes to data BRAM at ADDR  */
+            COM_CMD_READ_DATA     = 0x02,  /* request LEN bytes from ADDR           */
+            COM_CMD_WRITE_PROGRAM = 0x03,  /* write LEN bytes to instr BRAM at ADDR */
+            COM_CMD_LAUNCH        = 0x04,  /* start execution (ADDR = base PC)      */
+            COM_CMD_READ_STATUS   = 0x05,  /* read status register (no payload)     */
+            COM_CMD_WRITE_HASH    = 0x06,  /* load expected SHA256 hash (32 bytes)  */
+            COM_CMD_VALIDATE      = 0x07,  /* trigger hash validation               */
+            COM_CMD_ACK           = 0x08,  /* data was recieved properly            */
+            COM_CMD_NAK           = 0x09,  /* data was not recieved properly.       */
+            COM_CMD_RSP           = 0x0A,  /* response to PC request                */
+        - should manaage the SEND_ACK SEND_NACK flags from the reciever
+            - ie when the respective flag is recieved, the TX should send the ACK and/or NACK command 
+        - the only CMDs that will be transmited from the FPGA will be ACK, NACK, RSP
+        
